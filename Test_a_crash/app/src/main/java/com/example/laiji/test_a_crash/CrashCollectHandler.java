@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.List;
 
@@ -25,12 +27,14 @@ public class CrashCollectHandler implements UncaughtExceptionHandler {
     }
     @Override
     public void uncaughtException(Thread thread, Throwable throwable) {
-        Log.d("lylog","uncaughtException");
         List result = MainActivity.list_data;
         SharedPreferences userSettings = mContext.getSharedPreferences("result_data", 0);
         SharedPreferences.Editor editor = userSettings.edit();
-        Log.d("lylog",result.toString());
-        editor.putString("data",result.toString());
+
+        Gson gson = new Gson();
+        String json = gson.toJson(result);
+        editor.putString("data",json);
+        Log.d("lylog",json);
         editor.commit();
 //        Log.d("lylog",userSettings.getString("data","0"));
     }

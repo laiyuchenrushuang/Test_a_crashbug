@@ -9,6 +9,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import net.sf.json.JSONArray;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,14 +34,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         SharedPreferences s = getSharedPreferences("result_data",0);
         if(null != s.getString("data","0")) {
-            String[] a = s.getString("data","0").replace("[","").replace("]","").trim().split(",");
-            count = a.length;
-            Log.d(TAG,a.length+"");
-            if (a.length > 0){
-                for (int i =0;i<a.length;i++){
-                    insertData(i);
-                }
-            }
+            Gson gson = new Gson();
+            String json = s.getString("data","0");
+            Log.d("lylog",json);
+            Type type = new TypeToken<List<Integer>>() {
+            }.getType();
+            Log.d("lylog",gson.fromJson(json, type).toString());
+            list_data = gson.fromJson(json, type);
+            count = list_data.size();
         }
         initView();
         initEvent();
