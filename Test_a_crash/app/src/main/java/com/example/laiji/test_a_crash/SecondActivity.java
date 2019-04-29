@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.os.Process;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -99,7 +100,9 @@ public class SecondActivity extends AppCompatActivity implements View.OnClickLis
                 break;
             case R.id.bt_crash:
                 bt_crash = null;
-                bt_crash.setOnClickListener(this);
+                bt_crash.setText("oooo");
+                android.os.Process.killProcess(Process.myPid());
+                System.exit(0);
                 break;
             case R.id.bt_clear:
                 SharedPreferences share = getSharedPreferences("result_data",MODE_PRIVATE);
