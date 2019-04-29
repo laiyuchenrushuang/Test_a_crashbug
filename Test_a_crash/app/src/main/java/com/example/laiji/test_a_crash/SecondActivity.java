@@ -101,6 +101,7 @@ public class SecondActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.bt_crash:
                 bt_crash = null;
                 bt_crash.setText("oooo");
+                // throw new NullPointerException();  //神奇的测试
                 android.os.Process.killProcess(Process.myPid());
                 System.exit(0);
                 break;

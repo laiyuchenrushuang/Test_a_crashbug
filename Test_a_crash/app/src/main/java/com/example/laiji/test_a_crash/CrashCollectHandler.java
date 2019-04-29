@@ -3,6 +3,7 @@ package com.example.laiji.test_a_crash;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -35,5 +36,6 @@ public class CrashCollectHandler implements UncaughtExceptionHandler {
         Log.d("lylog",HttpResultUtil.toJsonString(result));
 
         editor.commit();
+        Toast.makeText(mContext,"程序异常捕获",Toast.LENGTH_LONG).show();
     }
 }
