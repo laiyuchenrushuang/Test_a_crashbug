@@ -2,12 +2,14 @@ package com.example.laiji.test_a_crash;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -23,28 +25,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static MyListView mListview;
     Button bt_crash;
     Button bt_add;
-    Button bt_new;
+    Button bt_clear;
     MyAdapter myAdapter;
-  public static  List<Integer> list_data = new ArrayList();
+    SharedPreferences s;
+    public static List<Integer> list_data = new ArrayList();
     int count = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        SharedPreferences s = getSharedPreferences("result_data",0);
-        if(null != s.getString("data","0")) {
-            Gson gson = new Gson();
-            String json = s.getString("data","0");
-            Log.d("lylog",json);
-            Type type = new TypeToken<List<Integer>>() {
-            }.getType();
-            Log.d("lylog",gson.fromJson(json, type).toString());
-            list_data = gson.fromJson(json, type);
+        getPhoneInfo();
+        s = getSharedPreferences("result_data", MODE_PRIVATE);
+        if (null != s && !s.getString("data", "").isEmpty()) {
+            Log.d("lylog","result_data come in");
+            String json = s.getString("data", "");
+            Log.d("lylog", json);
+            list_data = HttpResultUtil.getlist(json);
             count = list_data.size();
+        }else{
+            Log.d("lylog","result_data == 0");
+            list_data.add(000);
+            count ++;
         }
         initView();
         initEvent();
+    }
+
+    private void getPhoneInfo() {
+        Log.d(TAG,"Build.MANUFACTURER ="+Build.MANUFACTURER
+        +"  Build.PRODUCT="+ Build.PRODUCT
+                +" Build.BRAND ="+Build.BRAND
+                +" Build.MODEL ="+Build.MODEL
+        );
     }
 
     private void insertData(int i) {
@@ -55,14 +68,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void initEvent() {
         bt_crash.setOnClickListener(this);
         bt_add.setOnClickListener(this);
-        bt_new.setOnClickListener(this);
+        bt_clear.setOnClickListener(this);
     }
 
     private void initView() {
         mListview = findViewById(R.id.list);
-        bt_new = findViewById(R.id.bt_new);
-        myAdapter = new MyAdapter(this, list_data);
-        mListview.setAdapter(myAdapter);
+        bt_clear = findViewById(R.id.bt_clear);
+        Log.d("lylog","list_data ="+list_data);
+        if (list_data != null) {
+            myAdapter = new MyAdapter(this, list_data);
+            mListview.setAdapter(myAdapter);
+        }
         bt_add = findViewById(R.id.bt_adddata);
         bt_crash = findViewById(R.id.bt_crash);
     }
@@ -85,10 +101,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 bt_crash = null;
                 bt_crash.setOnClickListener(this);
                 break;
-            case R.id.bt_new:
-                startActivity(new Intent(this, SecondActivity.class));
+            case R.id.bt_clear:
+                SharedPreferences share = getSharedPreferences("result_data",MODE_PRIVATE);
+                SharedPreferences.Editor e = share.edit();
+                String clearString = share.getString("data","");
+                showToast(clearString);
+                e.clear();
+                e.commit();
+                list_data.clear();
                 break;
         }
+    }
+
+    private void showToast(String clearString) {
+        Toast.makeText(this,clearString,Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -110,6 +136,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onDestroy() {
+        Log.d("lylog", "onDestroy");
         super.onDestroy();
     }
 

@@ -28,14 +28,12 @@ public class CrashCollectHandler implements UncaughtExceptionHandler {
     @Override
     public void uncaughtException(Thread thread, Throwable throwable) {
         List result = MainActivity.list_data;
-        SharedPreferences userSettings = mContext.getSharedPreferences("result_data", 0);
+        SharedPreferences userSettings = mContext.getSharedPreferences("result_data", mContext.MODE_PRIVATE);
         SharedPreferences.Editor editor = userSettings.edit();
 
-        Gson gson = new Gson();
-        String json = gson.toJson(result);
-        editor.putString("data",json);
-        Log.d("lylog",json);
+        editor.putString("data", HttpResultUtil.toJsonString(result));
+        Log.d("lylog",HttpResultUtil.toJsonString(result));
+
         editor.commit();
-//        Log.d("lylog",userSettings.getString("data","0"));
     }
 }
