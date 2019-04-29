@@ -27,7 +27,7 @@ public class CrashCollectHandler implements UncaughtExceptionHandler {
     }
     @Override
     public void uncaughtException(Thread thread, Throwable throwable) {
-        List result = MainActivity.list_data;
+        List result = SecondActivity.list_data;
         SharedPreferences userSettings = mContext.getSharedPreferences("result_data", mContext.MODE_PRIVATE);
         SharedPreferences.Editor editor = userSettings.edit();
 

@@ -23,7 +23,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="crash button"/>
+            android:text="crash "/>
 
         <Button
             android:id="@+id/bt_adddata"
@@ -32,11 +32,11 @@
             android:layout_height="wrap_content"
             android:text="add"/>
         <Button
-            android:id="@+id/bt_new"
+            android:id="@+id/bt_clear"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="new"/>
+            android:text="clear"/>
     </LinearLayout>
 
     <ScrollView
