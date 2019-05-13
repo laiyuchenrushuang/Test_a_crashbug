@@ -39,13 +39,10 @@ public class SecondActivity extends AppCompatActivity implements View.OnClickLis
         getPhoneInfo();
         s = getSharedPreferences("result_data", MODE_PRIVATE);
         if (null != s && !s.getString("data", "").isEmpty()) {
-            Log.d("lylog","result_data come in");
             String json = s.getString("data", "");
-            Log.d("lylog", json);
             list_data = HttpResultUtil.getlist(json);
             count = list_data.size();
         }else{
-            Log.d("lylog","result_data == 0");
             list_data.add(000);
             count ++;
         }
@@ -88,7 +85,6 @@ public class SecondActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.bt_adddata:
-
                 insertData(count);
                 runOnUiThread(new Runnable() {
                     @Override
@@ -100,7 +96,7 @@ public class SecondActivity extends AppCompatActivity implements View.OnClickLis
                 break;
             case R.id.bt_crash:
                 bt_crash = null;
-                bt_crash.setText("oooo");
+                bt_crash.setText("----oo----");
                 // throw new NullPointerException();  //神奇的测试
                 android.os.Process.killProcess(Process.myPid());
                 System.exit(0);
@@ -109,10 +105,12 @@ public class SecondActivity extends AppCompatActivity implements View.OnClickLis
                 SharedPreferences share = getSharedPreferences("result_data",MODE_PRIVATE);
                 SharedPreferences.Editor e = share.edit();
                 String clearString = share.getString("data","");
-                showToast(clearString);
+                showToast(list_data.toString());
                 e.clear();
                 e.commit();
+                count = 0;
                 list_data.clear();
+                myAdapter.notifyDataSetChanged();
                 break;
         }
     }
